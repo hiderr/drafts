@@ -1,0 +1,66 @@
+{
+  "_version": "1.1.0",
+  "sap.app": {
+	"_version": "1.1.0",
+	"id": "zshellplugin",
+	"type": "component",
+	"applicationVersion": {
+	  "version": "@version@"
+	},
+	"dataSources": {
+	  "mainService": {
+		"uri": "/sap/opu/odata/sap/ZTC_MESSAGE2_SRV/",
+		"type": "OData",
+		"settings": {
+		  "odataVersion": "2.0"
+		}
+	  }
+	},
+	"title": "{{title}}",
+	"resources": "resources.json",
+	"ach": "CA-UI2-INT-FE"
+  },
+  "sap.ui": {
+	"_version": "1.1.0",
+	"technology": "UI5",
+	"deviceTypes": {
+	  "desktop": true,
+	  "tablet": true,
+	  "phone": true
+	},
+	"supportedThemes": [
+	  "sap_hcb",
+	  "sap_bluecrystal"
+	]
+  },
+  "sap.ui5": {
+	"_version": "1.1.0",
+	"dependencies": {
+	  "minUI5Version": "1.32",
+	  "libs": {
+		"sap.m": {
+		  "minVersion": "1.28"
+		},
+		"sap.ushell": {
+		  "minVersion": "1.32"
+		}
+	  }
+	},
+	"contentDensities": {
+	  "compact": true,
+	  "cozy": true
+	},
+	"models": {
+	  "i18n": {
+		"type": "sap.ui.model.resource.ResourceModel",
+		"settings": {
+		  "bundleName": "zshellplugin.i18n.i18n"
+		}
+	  },
+	  "": {
+		"dataSource": "mainService",
+		"preload": true
+	  }
+	}
+  }
+}
