@@ -1,0 +1,212 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+		  xmlns:core="sap.ui.core"
+		  xmlns="sap.m"
+		  xmlns:semantic="sap.m.semantic"
+		  xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+		  xmlns:smartTable="sap.ui.comp.smarttable"
+		  xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+		  controllerName="reqlist.controller.Master">
+
+	<!--	<semantic:MasterPage id="page" title="{masterView>/title}" navButtonPress="onNavBack" showNavButton="true">
+
+            <semantic:content>
+                <PullToRefresh id="pullToRefresh" visible="{device>/support/touch}" refresh="onRefresh"/>
+                &lt;!&ndash; For client side filtering add this to the items attribute:  parameters: {operationMode: 'Client'}}" &ndash;&gt;
+                <List id="list" items="{      path: '/requestSet',      sorter: {       path: 'Reqnum',       descending: false       },      groupHeaderFactory: '.createGroupHeader'     }" busyIndicatorDelay="{masterView>/delay}" noDataText="{masterView>/noDataText}+
+    " mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" growing="true" growingScrollToLoad="true" updateFinished="onUpdateFinished" selectionChange="onSelectionChange">
+                    <infoToolbar>
+                        <Toolbar active="true" id="filterBar" visible="{masterView>/isFilterBarVisible}" press="onOpenViewSettings">
+                            <Title id="filterBarLabel" text="Список запросов"/>
+                        </Toolbar>
+                    </infoToolbar>
+                    <items>
+                        <ObjectListItem press="onSelectionChange" title="Статус запроса - {Status}" intro="Дата создания - {Crdate}" activeIcon="sap-icon://action" number="{Reqnum}" numberTextDirection="LTR" type="Active">
+                        </ObjectListItem>
+                    </items>
+                </List>
+            </semantic:content>
+
+        </semantic:MasterPage>-->
+	<semantic:SemanticPage
+			title="{i18n>masterPageTitle}">
+		<semantic:content>
+			<!--<ScrollContainer width="100%" height="100%" vertical="true">-->
+			<smartTable:SmartTable id="LineItemSmartTable" entitySet="reqitemSet"
+								   tableType="ResponsiveTable"
+								   app:p13nDialogSettings="{group:{visible:false}}"
+								   beforeRebindTable="onBeforeRebindTable"
+								   useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="false"
+								   useTablePersonalisation="true" showTablePersonalisation="false"
+								   header="{i18n>documents}" showRowCount="true"
+								   persistencyKey="SmartTableAnalytical_Explored" enableAutoBinding="true"
+								   demandPopin="true" class="sapUiResponsiveContentPadding">
+				<smartTable:customToolbar>
+					<OverflowToolbar design="Transparent">
+						<ToolbarSpacer/>
+						<OverflowToolbarButton text="Test"/>
+						<OverflowToolbarButton icon="sap-icon://sort" visible="false" text="Sort" press="onSort"/>
+						<OverflowToolbarButton icon="sap-icon://filter" text="Filter" press="onFilter"/>
+						<OverflowToolbarButton icon="sap-icon://group-2" visible="false" text="Group" press="onGroup"/>
+						<OverflowToolbarButton icon="sap-icon://action-settings" text="Columns" press="onColumns"/>
+					</OverflowToolbar>
+				</smartTable:customToolbar>
+				<Table id="lineItemsList"
+					   width="auto"
+					   growing="false"
+					   growingScrollToLoad="false"
+					   noDataText="{i18n>detailLineItemTableNoDataText}"
+					   class="sapUiResponsiveMargin"
+				>
+					<columns>
+						<Column width="auto">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "PartnerName", "filterProperty":"PartnerName", "leadingProperty":"PartnerName"}'/>
+							</customData>
+							<header>
+								<Text text="{i18n>partnerName}"/>
+							</header>
+						</Column>
+						<Column width="auto">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Belnr", "filterProperty":"Belnr", "leadingProperty":"Belnr"}'/>
+							</customData>
+							<header>
+								<Text text="{/#reqitem/Belnr/@sap:label}"/>
+							</header>
+
+						</Column>
+						<Column width="auto">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Reqnum", "filterProperty":"Reqnum", "leadingProperty":"Reqnum"}'/>
+							</customData>
+							<header>
+								<Text text="{/#reqitem/Reqnum/@sap:label}"/>
+							</header>
+						</Column>
+						<Column width="auto">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Cruser", "leadingProperty":"Cruser"}'/>
+							</customData>
+							<header>
+								<Text text="{/#reqitem/Cruser/@sap:label}"/>
+							</header>
+						</Column>
+						<Column width="auto">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Crdate", "leadingProperty":["Crdate","Crtime"]}'/>
+							</customData>
+							<header>
+								<Text text="{/#reqitem/Crdate/@sap:label}"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Gjahr", "filterProperty":"Gjahr", "leadingProperty":"Gjahr"}'/>
+							</customData>
+							<header>
+								<Text text="{/#reqitem/Gjahr/@sap:label}"/>
+							</header>
+						</Column>
+						<Column width="auto" visible="false">
+							<customData>
+								<core:CustomData key="p13nData"
+												 value='\{"columnKey": "Bukrs", "filterProperty":"Bukrs", "leadingProperty":"Bukrs"}'/>
+							</customData>
+							<header>
+								<Text text=""/>
+							</header>
+						</Column>
+					</columns>
+					<items>
+						<ColumnListItem type="Navigation" press="go2Files">
+							<cells>
+								<Text text="{PartnerName}"/>
+								<ObjectIdentifier title="{Belnr}"/>
+								<Text text="{Reqnum}"/>
+								<Text text="{Cruser}"/>
+								<Text text="{Crdate} {path: 'Crtime', type: 'sap.ui.model.odata.type.Time',
+                                        formatOptions: {pattern: 'HH:mm:ss'}}"/>
+								<ObjectNumber unit="{Gjahr}"/>
+								<Text text="{Bukrs}"/>
+							</cells>
+						</ColumnListItem>
+					</items>
+				</Table>
+
+				<!--<columns>
+                    <Column width="100px" hAlign="Begin">
+                        <customData>
+                            <core:CustomData key="p13nData"
+                                             value='\{"columnKey": "Belnr", "maxLength": "5","columnIndex":"4", "leadingProperty": "Belnr"}' />
+                        </customData>
+                        <Text text="{/#reqitem/Belnr/@sap:label}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text
+                                    text="{Belnr}" />
+                        </cells>
+                    </ColumnListItem>
+                </items>-->
+			</smartTable:SmartTable>
+
+
+			<!--<Table id="lineItemsList"
+                   width="auto"
+                   items="{path: '/reqitemSet', sorter: [{path: 'Crdate', descending: true},{path:'Crtime', descending: true}]}"
+                   growing="false"
+                   growingScrollToLoad="false"
+                   noDataText="{i18n>detailLineItemTableNoDataText}"
+                   class="sapUiResponsiveMargin"
+            >
+                <headerToolbar>
+                    <Toolbar id="lineItemsToolbar">
+                        <Title id="lineItemsHeader" text=""/>
+                    </Toolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <Text text="{i18n>partnerName}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{/#reqitem/Belnr/@sap:label}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{/#reqitem/Reqnum/@sap:label}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{/#reqitem/Cruser/@sap:label}"/>
+                    </Column>
+                    <Column>
+                        <Text text="{/#reqitem/Crdate/@sap:label}"/>
+                    </Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true" hAlign="Right">
+                        <Text text="{/#reqitem/Gjahr/@sap:label}"/>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem type="Navigation" detailPress="" press="go2Files">
+                        <cells>
+                            <Text text="{PartnerName}"/>
+                            <ObjectIdentifier title="{Belnr}"/>
+                            <Text text="{Reqnum}"/>
+                            <Text text="{Cruser}"/>
+                            <Text text="{Crdate} {path: 'Crtime', type: 'sap.ui.model.odata.type.Time',
+                                        formatOptions: {pattern: 'HH:mm:ss'}}"/>
+                            <ObjectNumber unit="{Gjahr}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>-->
+			<!--</ScrollContainer>-->
+		</semantic:content>
+	</semantic:SemanticPage>
+</mvc:View>
